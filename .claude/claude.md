@@ -3,6 +3,42 @@
 ## Project Overview
 Python program to process Bible verse references into HTML files with images, audio, and navigation for daily devotional reading.
 
+## Code Modification Restrictions
+
+**Files you CAN directly modify (without approval):**
+- `c:\pyApps\sjlc-private\gui\` - Flask frontend code (templates, static files, routes)
+- Any `.html`, `.css`, `.js` files anywhere in the project
+- Test files (like `test-modal-slideout.html`)
+
+**Files you CANNOT directly modify (require approval process):**
+- `c:\pyApps\sjlc-private\src\` - Backend/CLI Python code
+- `c:\pyApps\sjlc-private\config\` - Configuration files
+- `c:\pyApps\sjlc-private\utils\` - Utility Python code
+- Any `.py` files outside the `gui/` folder
+
+**Approval Process for Backend/Src Changes:**
+1. **First, propose the design** - Present goals, new functions/classes needed, architectural changes
+2. **Wait for user approval** - Don't make ANY code changes until approved
+3. **Once approved**, then implement the changes
+4. **DO NOT** make incremental code change requests - present the full design plan first
+
+**Example (CORRECT):**
+```
+"I need to modify the backend to support X feature. Here's my plan:
+- Add new method `get_verse_metadata()` to bible_manager.py
+- Create new class `MetadataCache` in cache_manager.py
+- Update day_processor.py to call these new methods
+Do you approve this design?"
+```
+
+**Example (INCORRECT):**
+```
+"Let me modify bible_manager.py to add this method..."
+[makes change]
+"Now let me update cache_manager.py..."
+[makes another change]
+```
+
 ## Critical Path Information
 
 ### Project Locations
