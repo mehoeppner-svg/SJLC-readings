@@ -235,3 +235,112 @@ async function saveSettings() {
 - Refactored settings routes to use helper functions (31% code reduction)
 - Fixed all charmap encoding errors by standardizing on UTF-8
 - Made API keys portable via .env files
+
+## V2 Daily Reading Page Template (Google Sites Embed)
+
+### Overview
+Created a modern, feature-rich daily reading page template designed for embedding in Google Sites. Template provides ESV Bible text with interactive features, verse cards, audio player, and optional content panels.
+
+**File Location**: `c:\pyApps\sjlc-private\testing\test-daily-reading.html`
+
+### Key Features
+1. **Verse Card Image** (400px × 225px, 16:9 ratio)
+   - Overlaid verse text and reference
+   - Dark overlay filter (brightness 0.7)
+   - Copy verse card button
+   - Toggle-able via settings
+
+2. **ESV Audio Player**
+   - Integrated ESV audio with native HTML5 controls
+   - Compact design (32px height on desktop, 30px on mobile)
+   - Toggle-able via settings
+
+3. **Settings Menu** (Gear Icon ⚙️)
+   - **Position**: Top-right of white Bible content box
+   - **Popup Direction**: Upward (above gear icon)
+   - **Options**: Verse Card, Audio Player, Footnotes, Cross-References
+   - **Persistence**: LocalStorage preferences across sessions
+
+4. **Share Button** (Curved Arrow ↱)
+   - **Position**: Above Bible content box, aligned right
+   - Uses native Web Share API when available
+   - Fallback: Copy URL to clipboard
+   - Unicode icon (no external image dependencies)
+
+5. **ESV Bible Text Styling**
+   - Preserved ESV.org typography and formatting
+   - Serif font (Sentinel/Georgia) at 1.1rem
+   - Chapter numbers: Large drop cap style (3.2rem)
+   - Verse numbers: Small superscript gray text (0.7rem)
+   - Footnotes: Brown/orange `[1]` with hover popup
+   - Cross-references: Blue italic `(a)` with hover popup
+
+6. **Commentary & Devotional Panels**
+   - Gradient-styled buttons (purple for commentary, pink for devotional)
+   - Side panel overlay (500px max width, 90% on mobile)
+   - Smooth slide-in animation
+   - Auto-scroll to top of page when opened (using scroll anchor workaround)
+
+7. **Responsive Design**
+   - Desktop: 400px verse card, full features
+   - Mobile (<768px): 360px verse card, stacked layout
+   - Settings menu and modals adapt to screen size
+
+### Technical Implementation
+
+#### Google Sites Constraints
+- **No `<html>`, `<head>`, or `<body>` tags** (embedded element only)
+- **Inline CSS and JavaScript** (all styles in `<style>`, all scripts in `<script>`)
+- **Cross-origin iframe restrictions** (can't scroll parent window)
+
+#### Workarounds Implemented
+1. **Scroll Issue**: Created invisible anchor div at top (`scroll-top-anchor`) and use `scrollIntoView()` for in-page scrolling when commentary/devotional opens
+2. **Share Icon**: Use Unicode character `↱` instead of external image (Google Sites blocks some external resources)
+3. **Settings Positioning**: Wrapper div provides positioning context for popup menu above gear icon
+
+#### CSS Architecture
+- **CSS Variables**: Consistent colors, fonts, spacing (`:root` vars like `--bible-text-color`, `--accent-color`)
+- **ESV Preservation**: Matches ESV.org official styles for authenticity
+- **Flexbox & Position**: Settings wrapper, share button, modals all use strategic positioning
+- **Transitions**: Smooth animations (0.2s-0.3s) for hovers, panel slides, modal popups
+
+#### JavaScript Features
+- **LocalStorage Preferences**: `gospel_showImage`, `gospel_showAudio`, etc.
+- **Modal Positioning**: Calculates position relative to clicked element (footnote/crossref)
+- **Settings Menu**: Toggle visibility, click-outside-to-close detection
+- **Side Panel**: Overlay + slide-in animation with ESC key support
+
+### Design Decisions
+
+1. **Settings Menu Pops Up (Not Down)**
+   - Prevents blocking Bible text below
+   - Uses `bottom: calc(100% + 0.5rem)` relative to wrapper
+
+2. **Verse Card 400px Width**
+   - Balances visibility with page layout
+   - 16:9 aspect ratio = 225px height
+   - Mobile scales to 360px
+
+3. **Share Button Above (Not Inline)**
+   - Keeps white Bible box clean
+   - Positioned at `top: -2.5rem` with 3rem container margin
+
+4. **No Rotation/Background on Settings Hover**
+   - User preference: Simple color change only
+   - Border and icon color shift to accent teal
+
+5. **Footnotes Section Toggle-able**
+   - Hide inline markers AND bottom section together
+   - Maintains clean reading experience
+
+### File Organization
+```
+c:\pyApps\sjlc-private\testing\
+└── test-daily-reading.html    # V2 daily reading template (Google Sites embed)
+```
+
+### Next Steps (Not Yet Implemented)
+- Integration with backend day_processor.py to generate actual daily content
+- Dynamic data population from Bible API and database
+- Automated image generation for verse cards
+- Commentary/devotional content fetching from external sources
