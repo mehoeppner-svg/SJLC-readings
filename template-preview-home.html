@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Scripture Readings - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .page-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .page-header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .page-header .church-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .page-header .church-link:hover {
+            background: rgba(255,255,255,0.2);
+            color: #5dade2;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+                        url('https://via.placeholder.com/1200x400/34495e/ffffff?text=Daily+Scripture+Reading') center/cover;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 3rem 2rem;
+        }
+
+        .content-block {
+            margin-bottom: 3rem;
+        }
+
+        .content-block h3 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .content-block p {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .content-block ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-block li {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Visit Us Section */
+        .visit-section {
+            background: #ecf0f1;
+            padding: 2.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #3498db;
+        }
+
+        .visit-section h3 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            border-bottom: none;
+        }
+
+        .visit-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-block h4 {
+            font-size: 1.1rem;
+            color: #3498db;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .info-block p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-block a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .info-block a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .cta-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: #fff9e6;
+            border: 2px solid #f39c12;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            font-size: 1.15rem;
+            color: #2c3e50;
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer .disclaimer {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-style: italic;
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .visit-info {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .content-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1>Daily Scripture Readings</h1>
+            <div class="subtitle">St. John Lutheran Church Boerne, TX</div>
+            <a href="https://www.stjohnlutheran.com" class="church-link" target="_blank">Visit stjohnlutheran.com →</a>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h2>Welcome to Daily Scripture Readings</h2>
+            <p>
+                Join us each day in reading God's Word together as a church community.
+                This resource provides daily Scripture passages to help you grow in faith
+                and connect with the timeless truth of the Gospel.
+            </p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-section">
+            <!-- What This Site Offers -->
+            <div class="content-block">
+                <h3>What This Site Offers</h3>
+                <p>
+                    I created this website as a resource for our church community to provide easy access
+                    to daily Scripture readings in the ESV (English Standard Version) translation. Whether
+                    you're following the Gospel Project curriculum or simply seeking to engage with God's
+                    Word each day, you'll find carefully selected passages designed to deepen your understanding
+                    of Scripture and strengthen your faith.
+                </p>
+                <p>
+                    Each reading includes:
+                </p>
+                <ul>
+                    <li>The full Scripture text in ESV translation</li>
+                    <li>Beautiful images to accompany the passage</li>
+                    <li>Audio narration for listening while you read</li>
+                    <li>Commentary and context to enhance understanding</li>
+                    <li>Footnotes and cross-references for deeper study</li>
+                </ul>
+            </div>
+
+            <!-- Why Daily Reading Matters -->
+            <div class="content-block">
+                <h3>Why Daily Reading Matters</h3>
+                <p>
+                    When we read Scripture together as a community, we're united around shared themes and
+                    passages that connect us to Jesus Christ and God's redemptive story. Daily engagement
+                    with the Bible transforms our hearts, renews our minds, and draws us closer to the
+                    living God who speaks to us through His Word.
+                </p>
+                <div class="highlight-box">
+                    <p>
+                        "All Scripture is breathed out by God and profitable for teaching, for reproof,
+                        for correction, and for training in righteousness." — 2 Timothy 3:16
+                    </p>
+                </div>
+                <p>
+                    This isn't just about individual Bible study—it's about growing together as the body
+                    of Christ, discussing what we've learned, and encouraging one another in our faith journey.
+                </p>
+            </div>
+
+            <!-- Visit Us Section -->
+            <div class="visit-section">
+                <h3>Join Us for Worship</h3>
+                <p>
+                    We'd love to see you in person! Come worship with us and experience the fellowship
+                    of our church community.
+                </p>
+                <div class="visit-info">
+                    <div class="info-block">
+                        <h4>Location</h4>
+                        <p>
+                            <a href="https://maps.google.com/?q=315+Rosewood+Ave,+Boerne,+TX+78006" target="_blank">
+                                315 Rosewood Ave.<br>
+                                Boerne, TX 78006
+                            </a>
+                        </p>
+                    </div>
+                    <div class="info-block">
+                        <h4>Sunday Service Times</h4>
+                        <p>
+                            8:00 AM<br>
+                            9:30 AM<br>
+                            11:00 AM
+                        </p>
+                    </div>
+                </div>
+                <p style="margin-top: 1.5rem;">
+                    Learn more about our church, ministries, and upcoming events at
+                    <a href="https://www.stjohnlutheran.com" target="_blank">stjohnlutheran.com</a>
+                </p>
+            </div>
+
+            <!-- Getting Started -->
+            <div class="content-block">
+                <h3>Getting Started</h3>
+                <p>
+                    Ready to begin? Click the "Today" link in the navigation menu to access today's
+                    Scripture reading. You can also browse previous and upcoming readings by week,
+                    or jump to any specific date.
+                </p>
+                <p>
+                    Make it a habit to start each day in God's Word. Set aside 10-15 minutes in the
+                    morning or evening to read, reflect, and pray. Consider sharing what you're learning
+                    with family, friends, or your small group.
+                </p>
+                <a href="#" class="cta-button">View Today's Reading →</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>
+                Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®),
+                copyright © 2001 by <a href="https://www.crossway.org" target="_blank">Crossway</a>,
+                a publishing ministry of Good News Publishers. Used by permission. All rights reserved.
+            </p>
+            <p>
+                Learn more about St. John Lutheran Church at
+                <a href="https://www.stjohnlutheran.com" target="_blank">stjohnlutheran.com</a>
+            </p>
+            <div class="disclaimer">
+                Note: I have created this site as a resource for our church community and it is not in any way
+                endorsed or supported by St. John Lutheran Church.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
