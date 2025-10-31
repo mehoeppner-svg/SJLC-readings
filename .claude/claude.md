@@ -336,11 +336,117 @@ Created a modern, feature-rich daily reading page template designed for embeddin
 ### File Organization
 ```
 c:\pyApps\sjlc-private\testing\
-└── test-daily-reading.html    # V2 daily reading template (Google Sites embed)
+├── test-daily-reading.html    # V2 daily reading template (Google Sites embed)
+├── test-home-page.html        # Home page template (Google Sites embed)
+├── test-browse-page.html      # Browse/Archive page with calendar & search (Google Sites embed)
+└── test-gospel-page.html      # Gospel Project page with timeline (Google Sites embed)
 ```
+
+## Google Sites Template Pages (2024)
+
+Created modern, responsive HTML templates for embedding in Google Sites (no `<html>/<head>/<body>` tags, inline CSS/JS only).
+
+### 1. Home Page ([test-home-page.html](c:\pyApps\sjlc-private\testing\test-home-page.html))
+
+**Purpose:** Landing page for Daily Bible Readings site
+
+**Sections:**
+- **Hero**: Tagline "Know Jesus…Make Jesus Known" + description + CTA buttons
+- **Features Grid** (2x2): Scripture, Audio, Visual, Devotional
+- **Worship Info**: St. John Lutheran Church service times + location
+- **Final CTA**: Button to today's reading
+
+**Key Features:**
+- No duplicate header (Google Sites banner has title)
+- Reduced top padding for compact layout
+- Church buttons open in new tabs
+- Fully responsive mobile design
+
+**Design Decisions:**
+- Removed church logo to avoid appearing church-sponsored
+- Changed "Browse All Readings" from "Calendar"
+- Button text: "Website" instead of "Plan Your Visit"
+
+### 2. Browse Readings Page ([test-browse-page.html](c:\pyApps\sjlc-private\testing\test-browse-page.html))
+
+**Purpose:** Search and browse all readings by date or keyword (renamed from "Calendar" to "Browse Readings")
+
+**Sections:**
+- **Search**: Full-text search box with Enter key support
+- **Calendar**: Interactive month/year calendar with color-coded days
+  - Gospel Project: Teal gradient
+  - Other Reading: Purple gradient
+  - No Reading: Light gray
+  - Today: Bold teal border
+- **Results**: Dynamic search results or empty state
+
+**Key Features:**
+- Month/year dropdowns (current ± 2 years)
+- Current month display updates dynamically
+- Clickable calendar days navigate to readings
+- Hover tooltips show reading info
+- Legend explains color coding
+- Mobile-responsive grid
+
+**Technical:**
+- Sample data structure ready for backend integration
+- Smooth scrolling to results
+- Click day to navigate to reading page
+
+### 3. Gospel Project Page ([test-gospel-page.html](c:\pyApps\sjlc-private\testing\test-gospel-page.html))
+
+**Purpose:** Display 3-year Gospel Project journey with themes and progression
+
+**Sections:**
+- **Hero**: Project description (what was removed from home page)
+- **Visual Timeline**: Horizontal progress bar showing journey
+  - 6 major milestones: Creation → Patriarchs → Exodus → Kingdom → Jesus → Church
+  - Color-coded dots (green=completed, teal=current, gray=upcoming)
+  - Pulsing animation on current milestone
+  - Progress percentage display
+- **Collapsible Themes List**: All 100+ themes in chronological order
+  - Status indicator (✓ completed, → current, empty upcoming)
+  - Click to expand/collapse daily readings
+  - Each day links to reading page
+
+**Key Features:**
+- Scalable to 100+ themes without overwhelming page
+- Accordion keeps only one theme expanded at a time
+- Day links have smooth hover effects (shift right, teal background)
+- Shows progression through Scripture visually
+- Fully responsive for mobile
+
+**Design Decisions:**
+- Removed stats section (3 years, 100+ themes, 700+ readings) for accuracy concerns
+- Timeline provides big-picture context
+- Accordion allows detailed exploration without clutter
+
+### Common Design Patterns Across All Pages
+
+**Color Palette:**
+- Accent: `#72abbf` (teal)
+- Text: `#424547` (dark gray)
+- Secondary: `#5e6266` (medium gray)
+- Tertiary: `#9a9fa3` (light gray)
+- Background: `#f8f9fa` (off-white)
+
+**Typography:**
+- Serif: "Sentinel", Georgia (headings, titles)
+- Sans: "Gotham", Helvetica (body text)
+
+**Interactions:**
+- Smooth hover effects (0.2s-0.3s transitions)
+- Transform animations (translateY, scale)
+- Box shadow depth changes
+- Color shifts on hover
+
+**Responsive Breakpoint:** 768px
+- Mobile: Single column layouts, stacked buttons, full-width controls
+- Desktop: Multi-column grids, side-by-side layouts
 
 ### Next Steps (Not Yet Implemented)
 - Integration with backend day_processor.py to generate actual daily content
 - Dynamic data population from Bible API and database
 - Automated image generation for verse cards
 - Commentary/devotional content fetching from external sources
+- **Verse selection feature**: Click verse to select, copy without footnotes/verse numbers
