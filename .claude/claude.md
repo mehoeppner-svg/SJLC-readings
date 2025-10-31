@@ -42,18 +42,24 @@ Do you approve this design?"
 ## Critical Path Information
 
 ### Project Locations
-- **Working Directory (Git Repo)**: `c:\pyApps\SJLC-readings`
-- **Actual Project Code**: `c:\pyApps\sjlc-private\`
-  - Backend/CLI code: `c:\pyApps\sjlc-private\src\`
-  - Frontend/GUI code: `c:\pyApps\sjlc-private\gui\`
-  - Configuration: `c:\pyApps\sjlc-private\config\`
-  - Utilities: `c:\pyApps\sjlc-private\utils\`
-  - Templates: `c:\pyApps\sjlc-private\gui\templates\`
-  - Routes: `c:\pyApps\sjlc-private\gui\routes\`
+**IMPORTANT:** Always use workspace-relative paths (not absolute Windows paths). The base directory varies by computer:
+- Computer 1: `c:\pyApps\`
+- Computer 2: `c:\Users\comal\Downloads\hoeppner\`
+
+**Workspace Structure:**
+- **Documentation Repo**: `SJLC-readings/` (this repo)
+- **Actual Project Code**: `sjlc-private/`
+  - Backend/CLI code: `sjlc-private/src/`
+  - Frontend/GUI code: `sjlc-private/gui/`
+  - Configuration: `sjlc-private/config/`
+  - Utilities: `sjlc-private/utils/`
+  - Templates: `sjlc-private/testing/` (**Google Sites embed templates**)
+  - Flask Templates: `sjlc-private/gui/templates/`
+  - Routes: `sjlc-private/gui/routes/`
 
 ### Key Project Structure
 ```
-c:\pyApps\sjlc-private\
+sjlc-private/
 ├── config/
 │   ├── config.py           # Main configuration (reads from .env)
 │   └── credentials.json    # Google Drive API credentials
@@ -241,7 +247,7 @@ async function saveSettings() {
 ### Overview
 Created a modern, feature-rich daily reading page template designed for embedding in Google Sites. Template provides ESV Bible text with interactive features, verse cards, audio player, and optional content panels.
 
-**File Location**: `c:\pyApps\sjlc-private\testing\test-daily-reading.html`
+**File Location**: `sjlc-private/testing/test-daily-reading.html`
 
 ### Key Features
 1. **Verse Card Image** (400px × 225px, 16:9 ratio)
@@ -335,12 +341,93 @@ Created a modern, feature-rich daily reading page template designed for embeddin
 
 ### File Organization
 ```
-c:\pyApps\sjlc-private\testing\
-├── test-daily-reading.html    # V2 daily reading template (Google Sites embed)
+sjlc-private/testing/
+├── test-daily-reading.html    # V2 daily reading template (Google Sites embed) + VERSE SELECTION
 ├── test-home-page.html        # Home page template (Google Sites embed)
 ├── test-browse-page.html      # Browse/Archive page with calendar & search (Google Sites embed)
 └── test-gospel-page.html      # Gospel Project page with timeline (Google Sites embed)
 ```
+
+### Verse Selection Feature (V2 Daily Reading Page)
+
+**Status:** ✅ Complete (October 31, 2024)
+
+**Purpose:** Allow users to click individual verses and copy them without footnotes, verse numbers, or cross-references for clean text sharing.
+
+#### Key Features Implemented
+
+1. **Click-to-Select System**
+   - Simple click toggles verse selection on/off (no Ctrl/Shift required)
+   - Visual indicator: Dotted teal underline + subtle background
+   - Hover state: Lighter dotted underline
+   - Supports non-consecutive selection (e.g., verses 1, 3, 5)
+
+2. **Floating Action Button (FAB)**
+   - **Position:** Top-right of Bible content, left of gear icon (absolute position)
+   - **Layout:** Horizontal with X button and copy button (📋)
+   - **Verse Count Badge:** Red circular badge shows number of selected verses
+   - **Auto-hide:** Only visible when verses are selected
+   - **Styles:** Matches gear icon appearance (white background, compact)
+
+3. **Copy Functionality**
+   - **Click:** Click FAB copy button to copy verses
+   - **Keyboard:** Ctrl+C (or Cmd+C on Mac) copies selected verses
+   - **Visual Confirmation:** Button changes to checkmark (✓) for 1.5 seconds
+   - **Button State:** Disabled during copy to prevent double-clicks
+   - **Auto-clear:** Selection automatically clears after 1.5 second confirmation
+   - **Toast Notification:** "Verses copied to clipboard!" message appears
+
+4. **Smart Reference Formatting**
+   - **Single verse:** `Genesis 1:14 - [text]`
+   - **Consecutive verses:** `Genesis 1:14-16 - [text]`
+   - **Non-consecutive verses:** `Genesis 1:14, 16, 18 - [text]` (compact format)
+   - All 66 Bible books supported in lookup table
+
+5. **Text Cleaning**
+   - Removes footnote markers (`[1]`, `[2]`)
+   - Removes verse numbers
+   - Strips cross-reference markers
+   - Removes HTML tags
+   - Normalizes whitespace
+
+6. **Clear Selection Methods**
+   - **X Button:** Click X on FAB to clear
+   - **ESC Key:** Press Escape to clear
+   - **Click Outside:** Click outside Bible content (except modals)
+   - **Auto-clear:** After successful copy (1.5s delay with checkmark confirmation)
+
+7. **Modal Integration**
+   - Clicking footnotes/cross-references does NOT clear selections
+   - Opening/closing commentary/devotional panels preserves selections
+   - Click-outside detection excludes all modal overlays
+
+8. **Mobile Support**
+   - Long-press verse for 500ms to select (with vibration feedback)
+   - Responsive FAB sizing (smaller on mobile)
+   - Touch event handling with move detection
+   - Full-width toast notifications on mobile
+
+#### Technical Implementation
+
+**CSS Classes:**
+- `.verse-wrapper` - Wraps each verse text
+- `.verse-wrapper.selected` - Selected verse styling
+- `.copy-fab` - Floating action button container (absolute positioned)
+- `.copy-button` - Copy button with clipboard icon
+- `.clear-selection-button` - X button
+- `.verse-count-badge` - Red badge showing count
+- `.verse-toast` - Success notification
+
+**JavaScript:**
+- `VerseSelector` class with ~350 lines of code
+- Dynamically wraps verses on page load
+- Parses ESV verse IDs: `v[bookNum][chapterNum][verseNum]-1`
+- Clipboard API with fallback for older browsers
+- Event delegation for click handling
+- Keyboard shortcut: Ctrl+C / Cmd+C
+
+**UX Decision (Oct 31, 2024):**
+After copy, the button shows a checkmark for 1.5 seconds, then automatically clears the selection. This provides clear completion feedback and a clean slate for the next selection.
 
 ## Google Sites Template Pages (2024)
 
@@ -444,9 +531,34 @@ Created modern, responsive HTML templates for embedding in Google Sites (no `<ht
 - Mobile: Single column layouts, stacked buttons, full-width controls
 - Desktop: Multi-column grids, side-by-side layouts
 
+### Verse Selection Feature (Oct 31, 2024) ✅
+**Status:** COMPLETE
+
+**What it does:**
+- Users can click any verse to select it (dotted teal underline appears)
+- Click again to deselect
+- Supports non-consecutive verse selection (e.g., verses 1, 3, 5)
+- Floating copy button (FAB) appears at bottom-right when verses are selected
+- Shows verse count badge on FAB
+- X button on FAB clears all selections
+- Copies verses with smart references:
+  - Single: "Genesis 1:1 - text"
+  - Consecutive: "Genesis 1:1-3 - text"
+  - Non-consecutive: "Genesis 1:1, 3, 5 - text"
+- Strips all footnotes, verse numbers, and cross-references from copied text
+- Toast notification confirms successful copy
+- ESC key or click-outside to clear selections
+- Mobile long-press (500ms) to select with vibration feedback
+
+**Technical Implementation:**
+- JavaScript dynamically wraps verses on page load (no HTML changes needed)
+- All 66 Bible books included in lookup table
+- Clipboard API with fallback for older browsers
+- ~160 lines of CSS, ~310 lines of JavaScript
+- Z-index: 10002-10003 (above side panel at 10000-10001)
+
 ### Next Steps (Not Yet Implemented)
 - Integration with backend day_processor.py to generate actual daily content
 - Dynamic data population from Bible API and database
 - Automated image generation for verse cards
 - Commentary/devotional content fetching from external sources
-- **Verse selection feature**: Click verse to select, copy without footnotes/verse numbers
