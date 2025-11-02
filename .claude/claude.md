@@ -245,29 +245,48 @@ DRIVE_FOLDERS.YEARS (root)
 
 ---
 
-## V2 Current Status
+## Documentation Structure
 
-### ✅ Completed (Phase 1: Standalone Prototypes)
-- Admin Dashboard - Stats, 7-day preview, 4 navigation cards
-- Readings Manager - 4 views (Calendar, List, Collections, Year Overview)
-- Content Manager - Calendar/List views, 3-screen generation modal
-- Maintenance - Cache management, rebuild operations
-- Settings - System settings, processing options
-- Header Component - Reusable header for all pages
+This file (claude.md) provides **architectural overview only**. For detailed information, consult these files:
 
-### ⏳ TODO (Phase 2: Backend Migration)
-- Migrate from JSON files to SQLite database
-- Create `database_manager.py`, `readings_manager.py`, `collections_manager.py`
-- Create utils modules (date_helpers, api_helpers, file_helpers)
-- Update existing managers to query database
-- Migration script (V1 JSON → V2 SQLite)
+### Core Documentation Files
 
-### ⏳ TODO (Phase 3: Flask Template Conversion)
-- Convert standalone HTML prototypes to Jinja2 templates
-- Create new API routes for readings, collections
-- Update existing routes for database queries
-- Connect frontend to backend
-- End-to-end testing
+**1. `SJLC-readings/.claude/claude.md`** (this file)
+- **Purpose:** Quick architectural reference for new Claude sessions
+- **When to read:** Always read this first (5 min scan)
+- **Contents:** Project overview, data model, repository structure, external services, V1→V2 changes
+- **Updates:** Only when architecture changes (rare)
+
+**2. `sjlc-private/backend.md`**
+- **Purpose:** Complete backend technical specification
+- **When to read:** When working on backend code (managers, database, APIs)
+- **Contents:** Database schema, manager architecture, code consolidation, processing flows, external API integration, threading
+- **Updates:** When backend implementation details change
+
+**3. `sjlc-private/gui/admin.md`**
+- **Purpose:** Complete admin GUI specification
+- **When to read:** When working on frontend (templates, routes, UI/UX)
+- **Contents:** Design system, page specifications, data flow (API contracts), component library, V1→V2 UI changes
+- **Updates:** When UI specifications change
+
+**4. `sjlc-private/v2-todo.md`**
+- **Purpose:** Implementation plan and progress tracking
+- **When to read:** To see current status, next steps, what's completed
+- **Contents:** Phase-by-phase plan, task checkboxes, changelog, current blockers
+- **Updates:** After completing each task, mark as done and update status
+
+### How to Use These Files
+
+**Starting a new session:**
+1. Read `claude.md` (this file) - 5 min architectural overview
+2. Read `v2-todo.md` - See current status and next task
+3. Read `backend.md` or `admin.md` - Depending on task type
+4. Begin work
+
+**During work:**
+- Reference `backend.md` or `admin.md` for detailed specs
+- Update `v2-todo.md` after completing tasks
+- Only update `claude.md`, `backend.md`, `admin.md` if architecture/specs change
 
 ---
 
@@ -418,26 +437,63 @@ DRIVE_FOLDERS.YEARS (root)
 
 ---
 
+## Critical: File Location Rules
+
+**IMPORTANT:** Always use absolute paths. Never guess repository locations.
+
+### Backend Code (sjlc-private repo ONLY)
+```
+c:\pyApps\sjlc-private\
+├── src\*.py                    # Python managers
+├── gui\web_app_v2.py          # Flask app
+├── gui\routes\*.py            # API routes
+├── gui\templates\*.html       # Jinja2 templates
+├── gui\static\                # CSS/JS/images
+├── config\*                   # Configuration files
+├── utils\*.py                 # Helper modules
+└── data\sjlc_readings.db      # SQLite database
+```
+
+### Published Content (SJLC-readings repo ONLY)
+```
+c:\pyApps\SJLC-readings\
+├── years\{year}\content\*.html    # Daily HTML files
+├── daily_content\*.json           # JSON indexes
+└── .claude\*.md                   # Documentation
+```
+
+### V1 Backups (Reference only, don't modify)
+```
+c:\pyApps\sjlc-private\
+├── src\backups\*              # Old V1 managers
+├── gui\routes\backups\*       # Old V1 routes
+├── gui\templates\backups\*    # Old V1 templates
+└── gui\web_app_v1.py          # Old Flask app (renamed)
+```
+
+**Never look in SJLC-readings repo for backend Python code!**
+
+---
+
 ## Quick Start for New Claude Sessions
 
-1. **Read this file first** (5 min) to understand project structure
-2. **Check `backend.md`** for detailed backend architecture and data flows
-3. **Check `gui/admin.md`** for admin interface specifications and API contracts
-4. **Review current task** in chat context
-5. **Ask clarifying questions** before making changes to backend code
+1. **Read this file first** (5 min) - Architectural overview
+2. **Read `v2-todo.md`** - Current status and next task
+3. **Read `backend.md` or `admin.md`** - Detailed specs for your task
+4. **Begin work** - Reference docs as needed
 
 ---
 
 ## Notes
 
-- **V2 is in progress:** Admin GUI prototypes are complete, backend migration is TODO
+- **V2 implementation in progress** - See `v2-todo.md` for current status
 - **Two repos:** Keep public (HTML) and private (code) separate
-- **Database first:** All V2 changes start with SQLite migration, then update managers
-- **Collections are key:** Separate from readings, matched by date ranges, visual indicators everywhere
-- **Cache Drive IDs:** Critical for performance - store in database, not API calls
-- **Calendar years only:** No more project year confusion (Sept-Aug model is gone)
+- **Database first:** SQLite foundation, then managers, then UI
+- **Collections are key:** Separate from readings, matched by date ranges
+- **Cache Drive IDs:** Store in database to eliminate API calls
+- **Calendar years only:** No more Sept-Aug project year confusion
 
 ---
 
 **Last Updated:** 2025-01-02
-**Status:** V2 Planning Complete, Implementation Pending
+**Status:** V2 Implementation Starting - See v2-todo.md
