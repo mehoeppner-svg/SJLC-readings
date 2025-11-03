@@ -65,23 +65,30 @@ Python/Flask application for managing daily Bible reading content with verse ref
 - **One reading per day** - Sundays typically omitted
 - **~352 readings per year**
 
-**2. Collections** (Organizational containers like "Gospel Project", "Advent 2024")
+**2. Collections** (Organizational containers like "Gospel Project", "Advent 2024", "Lent 2025")
 ```python
 {
     "name": "Gospel Project",
     "color": "#72abbf",             # Hex color for UI display
-    "weeks": [
+    "weeks": [                       # Note: "weeks" = flexible date ranges (not just 7 days)
         {
-            "start": "2025-09-07",  # Week start date
-            "end": "2025-09-13",    # Week end date
-            "theme": "Creation"     # Weekly theme
+            "start": "2025-09-07",  # Range start date
+            "end": "2025-09-13",    # Range end date
+            "theme": "Creation"     # Theme for this date range
+        },
+        {
+            "start": "2025-03-05",  # Single day (Ash Wednesday)
+            "end": "2025-03-05",
+            "theme": "Ashes & Repentance"
         },
         ...
     ]
 }
 ```
-- **Independent from readings** - Stored separately
-- **Date-based matching** - If reading date falls within week range, it's part of that collection
+- **Independent from readings** - Stored separately, linked by date matching only
+- **Date-based matching** - If reading date falls within a collection's date range, it belongs to that collection
+- **One collection per reading** - Each reading can only match ONE collection (no cross-collection overlaps)
+- **Flexible date ranges** - Can be 1 day, 7 days, or any length (not restricted to weeks)
 - **Visual indicators** - 4px colored left borders on calendar days, colored dots in lists
 
 **3. Content Status** (Tracks generated content and caches Drive file IDs)
