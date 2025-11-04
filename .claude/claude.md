@@ -102,6 +102,7 @@ Python/Flask application for managing daily Bible reading content with verse ref
 ```
 - **Cache Drive file IDs** - Eliminates API calls when displaying content
 - **Status tracking** - Complete (image + HTML), Partial (only one), Missing (neither)
+- **Independent from readings** - No foreign key constraint; allows images without readings and vice-versa
 
 ### Database: SQLite
 
@@ -228,8 +229,7 @@ c:/pyApps/SJLC-readings/          # Public repository
 ```
 DRIVE_FOLDERS.YEARS (root)
 └── {year}/
-    └── content/
-        └── {date}_image.webp
+    └── {date}_image.webp
 ```
 
 **Auth:** OAuth 2.0 (credentials.json → token.json)
@@ -238,6 +238,8 @@ DRIVE_FOLDERS.YEARS (root)
 **Thread Safety:** Single `_api_lock` for ALL Drive operations (critical)
 
 **Caching:** File IDs cached in `content_status` table to eliminate API calls during display
+
+**Note:** Images stored directly in year folder (e.g., "2025/"), not in "content" subfolder
 
 ### 4. GitHub Pages
 **Purpose:** HTML content hosting (public access)
