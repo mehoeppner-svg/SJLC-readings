@@ -30,7 +30,11 @@ Python/Flask application for managing daily Bible reading content with verse ref
 
 ### Two Separate Repositories
 
-**1. Public Repository: `SJLC-readings`** (c:\pyApps\SJLC-readings)
+**IMPORTANT:** Repository locations are configured in `.env` file variables:
+- `GITHUB_PUBLIC_REPO` - Path to public SJLC-readings repository
+- `GITHUB_PRIVATE_REPO` - Path to private sjlc-private repository
+
+**1. Public Repository: `SJLC-readings`** (path from `GITHUB_PUBLIC_REPO` in .env)
 - **Purpose:** Published HTML content served via GitHub Pages
 - **URL:** https://mehoeppner-svg.github.io/SJLC-readings
 - **Contents:**
@@ -38,7 +42,7 @@ Python/Flask application for managing daily Bible reading content with verse ref
   - `daily_content/{year}_daily_content.json` - Content index for fast loading
   - `.claude/claude.md` - This documentation file
 
-**2. Private Repository: `sjlc-private`** (c:\pyApps\sjlc-private)
+**2. Private Repository: `sjlc-private`** (path from `GITHUB_PRIVATE_REPO` in .env)
 - **Purpose:** Backend code and admin interface (NOT published)
 - **Contents:**
   - `src/` - Backend Python classes
@@ -129,8 +133,12 @@ drive_folders (year, folder_id, last_scanned)
 
 ## Project Structure (Detailed)
 
+**Note:** Paths shown are examples. Actual locations from `.env` variables:
+- Private repo: `$GITHUB_PRIVATE_REPO`
+- Public repo: `$GITHUB_PUBLIC_REPO`
+
 ```
-c:/pyApps/sjlc-private/           # Private repository
+$GITHUB_PRIVATE_REPO/             # Private repository (from .env)
 ├── src/                          # Backend Python (REQUIRE APPROVAL)
 │   ├── database_manager.py      # SQLite operations (NEW V2)
 │   ├── readings_manager.py      # Readings CRUD (NEW V2)
@@ -142,7 +150,7 @@ c:/pyApps/sjlc-private/           # Private repository
 │   ├── drive_manager.py         # Google Drive operations (SIMPLIFIED V2)
 │   └── github_manager.py        # GitHub filesystem operations (unchanged)
 ├── gui/                          # Flask admin app (CAN MODIFY)
-│   ├── web_app.py               # Flask app initialization
+│   ├── web_app_v2.py            # Flask app initialization
 │   ├── routes/                  # API endpoints (WILL BE UPDATED V2)
 │   │   ├── dashboard.py
 │   │   ├── readings.py          # Replaces bookmarks.py (NEW V2)
@@ -181,9 +189,9 @@ c:/pyApps/sjlc-private/           # Private repository
 │   ├── errors.log
 │   ├── processing.log
 │   └── system.log
-└── .env                          # Environment variables (API keys)
+└── .env                          # Environment variables (GITHUB_PUBLIC_REPO, GITHUB_PRIVATE_REPO, API keys)
 
-c:/pyApps/SJLC-readings/          # Public repository
+$GITHUB_PUBLIC_REPO/              # Public repository (from .env)
 ├── years/                        # Generated HTML content
 │   └── {year}/
 │       └── content/
@@ -346,31 +354,33 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 
 ## File Location Quick Reference
 
+**Note:** Use `$GITHUB_PRIVATE_REPO` and `$GITHUB_PUBLIC_REPO` environment variables from `.env` file.
+
 ### Backend Code
-- **Database:** `sjlc-private/data/sjlc_readings.db`
-- **Managers:** `sjlc-private/src/*_manager.py`
-- **Utils:** `sjlc-private/utils/*.py`
-- **Config:** `sjlc-private/config/config.py` and `.env`
+- **Database:** `$GITHUB_PRIVATE_REPO/data/sjlc_readings.db`
+- **Managers:** `$GITHUB_PRIVATE_REPO/src/*_manager.py`
+- **Utils:** `$GITHUB_PRIVATE_REPO/utils/*.py`
+- **Config:** `$GITHUB_PRIVATE_REPO/config/config.py` and `.env`
 
 ### Frontend Code
-- **Flask App:** `sjlc-private/gui/web_app.py`
-- **Routes:** `sjlc-private/gui/routes/*.py`
-- **Templates:** `sjlc-private/gui/templates/*.html`
-- **Prototypes:** `sjlc-private/gui/testing/*.html` (V2 standalone HTML)
+- **Flask App:** `$GITHUB_PRIVATE_REPO/gui/web_app_v2.py`
+- **Routes:** `$GITHUB_PRIVATE_REPO/gui/routes/*.py`
+- **Templates:** `$GITHUB_PRIVATE_REPO/gui/templates/*.html`
+- **Prototypes:** `$GITHUB_PRIVATE_REPO/gui/testing/*.html` (V2 standalone HTML)
 
 ### Published Content
-- **HTML:** `SJLC-readings/years/{year}/content/{date}_reading.html`
-- **JSON Index:** `SJLC-readings/daily_content/{year}_daily_content.json`
+- **HTML:** `$GITHUB_PUBLIC_REPO/years/{year}/content/{date}_reading.html`
+- **JSON Index:** `$GITHUB_PUBLIC_REPO/daily_content/{year}_daily_content.json`
 
 ### Logs
-- **Errors:** `sjlc-private/logs/errors.log`
-- **Processing:** `sjlc-private/logs/processing.log`
-- **System:** `sjlc-private/logs/system.log`
+- **Errors:** `$GITHUB_PRIVATE_REPO/logs/errors.log`
+- **Processing:** `$GITHUB_PRIVATE_REPO/logs/processing.log`
+- **System:** `$GITHUB_PRIVATE_REPO/logs/system.log`
 
 ### Documentation
-- **Architecture:** `SJLC-readings/.claude/claude.md` (this file)
-- **Backend Details:** `sjlc-private/backend.md`
-- **Admin GUI Details:** `sjlc-private/gui/admin.md`
+- **Architecture:** `$GITHUB_PUBLIC_REPO/.claude/claude.md` (this file)
+- **Backend Details:** `$GITHUB_PRIVATE_REPO/backend.md`
+- **Admin GUI Details:** `$GITHUB_PRIVATE_REPO/gui/admin.md`
 
 ---
 
@@ -448,11 +458,15 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 
 ## Critical: File Location Rules
 
-**IMPORTANT:** Always use absolute paths. Never guess repository locations.
+**IMPORTANT:** Repository paths are configured in `.env` file:
+- `GITHUB_PUBLIC_REPO` - Path to public SJLC-readings repository
+- `GITHUB_PRIVATE_REPO` - Path to private sjlc-private repository
 
-### Backend Code (sjlc-private repo ONLY)
+Always use these environment variables. Never hardcode paths.
+
+### Backend Code (sjlc-private repo from GITHUB_PRIVATE_REPO)
 ```
-c:\pyApps\sjlc-private\
+$GITHUB_PRIVATE_REPO/
 ├── src\*.py                    # Python managers
 ├── gui\web_app_v2.py          # Flask app
 ├── gui\routes\*.py            # API routes
@@ -463,9 +477,9 @@ c:\pyApps\sjlc-private\
 └── data\sjlc_readings.db      # SQLite database
 ```
 
-### Published Content (SJLC-readings repo ONLY)
+### Published Content (SJLC-readings repo from GITHUB_PUBLIC_REPO)
 ```
-c:\pyApps\SJLC-readings\
+$GITHUB_PUBLIC_REPO/
 ├── years\{year}\content\*.html    # Daily HTML files
 ├── daily_content\*.json           # JSON indexes
 └── .claude\*.md                   # Documentation
@@ -473,7 +487,7 @@ c:\pyApps\SJLC-readings\
 
 ### V1 Backups (Reference only, don't modify)
 ```
-c:\pyApps\sjlc-private\
+$GITHUB_PRIVATE_REPO/
 ├── src\backups\*              # Old V1 managers
 ├── gui\routes\backups\*       # Old V1 routes
 ├── gui\templates\backups\*    # Old V1 templates
