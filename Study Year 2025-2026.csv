@@ -1,48 +1,49 @@
-date,reference,theme_start,theme_end,theme_name,collection_name
-2025-09-08,Genesis 1:1-13,2025-09-07,2025-09-13,Creation,Gospel Project
-2025-09-09,Genesis 1:14-2:3,2025-09-07,2025-09-13,Creation,Gospel Project
-2025-09-10,Psalm 8,2025-09-07,2025-09-13,Creation,Gospel Project
-2025-09-11,Genesis 2:4-17,2025-09-07,2025-09-13,Creation,Gospel Project
-2025-09-12,Genesis 2:18-25,2025-09-07,2025-09-13,Creation,Gospel Project
-2025-09-13,Psalm 148,2025-09-07,2025-09-13,Creation,Gospel Project
-2025-09-15,Genesis 3:1-7,2025-09-14,2025-09-20,The Fall,Gospel Project
-2025-09-16,Genesis 3:8-13,2025-09-14,2025-09-20,The Fall,Gospel Project
-2025-09-17,Genesis 3:14-16,2025-09-14,2025-09-20,The Fall,Gospel Project
-2025-09-18,Genesis 3:17-19,2025-09-14,2025-09-20,The Fall,Gospel Project
-2025-09-19,Genesis 3:20-24,2025-09-14,2025-09-20,The Fall,Gospel Project
-2025-09-20,Psalm 6,2025-09-14,2025-09-20,The Fall,Gospel Project
-2025-09-22,Genesis 4:1-5,2025-09-21,2025-09-27,The First Family,Gospel Project
-2025-09-23,Genesis 4:6-8,2025-09-21,2025-09-27,The First Family,Gospel Project
-2025-09-24,Genesis 4:9-12,2025-09-21,2025-09-27,The First Family,Gospel Project
-2025-09-25,Genesis 4:13-16,2025-09-21,2025-09-27,The First Family,Gospel Project
-2025-09-26,Genesis 4:17-26,2025-09-21,2025-09-27,The First Family,Gospel Project
-2025-09-27,Psalm 75,2025-09-21,2025-09-27,The First Family,Gospel Project
-2025-09-29,Genesis 5:1-32,2025-09-28,2025-10-04,The Flood,Gospel Project
-2025-09-30,Genesis 6:1-7:24,2025-09-28,2025-10-04,The Flood,Gospel Project
-2025-10-01,Genesis 8:1-22,2025-09-28,2025-10-04,The Flood,Gospel Project
-2025-10-02,Genesis 9:1-17,2025-09-28,2025-10-04,The Flood,Gospel Project
-2025-10-03,Genesis 9:18-29,2025-09-28,2025-10-04,The Flood,Gospel Project
-2025-10-04,Psalm 53,2025-09-28,2025-10-04,The Flood,Gospel Project
-2025-10-06,Genesis 10:1-20,2025-10-05,2025-10-11,The Tower of Babel,Gospel Project
-2025-10-07,Genesis 10:21-32,2025-10-05,2025-10-11,The Tower of Babel,Gospel Project
-2025-10-08,Genesis 11:1-4,2025-10-05,2025-10-11,The Tower of Babel,Gospel Project
-2025-10-09,Genesis 11:5-9,2025-10-05,2025-10-11,The Tower of Babel,Gospel Project
-2025-10-10,Genesis 11:10-26,2025-10-05,2025-10-11,The Tower of Babel,Gospel Project
-2025-10-11,Psalm 96,2025-10-05,2025-10-11,The Tower of Babel,Gospel Project
-2025-10-13,Genesis 11:27-32,2025-10-12,2025-10-18,Abram's Call,Gospel Project
-2025-10-14,Genesis 12:1-9,2025-10-12,2025-10-18,Abram's Call,Gospel Project
-2025-10-15,Genesis 12:10-20,2025-10-12,2025-10-18,Abram's Call,Gospel Project
-2025-10-16,Genesis 13:1-18,2025-10-12,2025-10-18,Abram's Call,Gospel Project
-2025-10-17,Genesis 14:1-24,2025-10-12,2025-10-18,Abram's Call,Gospel Project
-2025-10-18,Psalm 128,2025-10-12,2025-10-18,Abram's Call,Gospel Project
-2025-10-20,Genesis 15:1-21,2025-10-19,2025-10-25,Abraham's Covenant,Gospel Project
-2025-10-21,Genesis 16:1-16,2025-10-19,2025-10-25,Abraham's Covenant,Gospel Project
-2025-10-22,Genesis 17:1-27,2025-10-19,2025-10-25,Abraham's Covenant,Gospel Project
-2025-10-23,Genesis 18:1-15,2025-10-19,2025-10-25,Abraham's Covenant,Gospel Project
-2025-10-24,Genesis 18:16-19:38,2025-10-19,2025-10-25,Abraham's Covenant,Gospel Project
-2025-10-25,Psalm 105,2025-10-19,2025-10-25,Abraham's Covenant,Gospel Project
-2025-10-27,Genesis 20:1-18,2025-10-26,2025-10-31,Abraham's Test,Gospel Project
-2025-10-28,Genesis 21:1-17,2025-10-26,2025-10-31,Abraham's Test,Gospel Project
-2025-10-29,Genesis 21:8-21,2025-10-26,2025-10-31,Abraham's Test,Gospel Project
-2025-10-30,Genesis 21:22-34,2025-10-26,2025-10-31,Abraham's Test,Gospel Project
-2025-10-31,Genesis 22:1-19,2025-10-26,2025-10-31,Abraham's Test,Gospel Project
+date,reference,theme_name,collection_name
+9/6/2025,John 3:14,Salvation,Gospel Project
+9/8/2025,Genesis 1:1-13,Creation,Gospel Project
+9/9/2025,Genesis 1:14-2:3,Creation,Gospel Project
+9/10/2025,Psalm 8,Creation,Gospel Project
+9/11/2025,Genesis 2:4-17,Creation,Gospel Project
+9/12/2025,Genesis 2:18-25,Creation,Gospel Project
+9/13/2025,Psalm 148,Creation,Gospel Project
+9/15/2025,Genesis 3:1-7,The Fall,Gospel Project
+9/16/2025,Genesis 3:8-13,The Fall,Gospel Project
+9/17/2025,Genesis 3:14-16,The Fall,Gospel Project
+9/18/2025,Genesis 3:17-19,The Fall,Gospel Project
+9/19/2025,Genesis 3:20-24,The Fall,Gospel Project
+9/20/2025,Psalm 6,The Fall,Gospel Project
+9/22/2025,Genesis 4:1-5,The First Family,Gospel Project
+9/23/2025,Genesis 4:6-8,The First Family,Gospel Project
+9/24/2025,Genesis 4:9-12,The First Family,Gospel Project
+9/25/2025,Genesis 4:13-16,The First Family,Gospel Project
+9/26/2025,Genesis 4:17-26,The First Family,Gospel Project
+9/27/2025,Psalm 75,The First Family,Gospel Project
+9/29/2025,Genesis 5:1-32,The Flood,Gospel Project
+9/30/2025,Genesis 6:1-7:24,The Flood,Gospel Project
+10/1/2025,Genesis 8:1-22,The Flood,Gospel Project
+10/2/2025,Genesis 9:1-17,The Flood,Gospel Project
+10/3/2025,Genesis 9:18-29,The Flood,Gospel Project
+10/4/2025,Psalm 53,The Flood,Gospel Project
+10/6/2025,Genesis 10:1-20,The Tower of Babel,Gospel Project
+10/7/2025,Genesis 10:21-32,The Tower of Babel,Gospel Project
+10/8/2025,Genesis 11:1-4,The Tower of Babel,Gospel Project
+10/9/2025,Genesis 11:5-9,The Tower of Babel,Gospel Project
+10/10/2025,Genesis 11:10-26,The Tower of Babel,Gospel Project
+10/11/2025,Psalm 96,The Tower of Babel,Gospel Project
+10/13/2025,Genesis 11:27-32,Abram's Call,Gospel Project
+10/14/2025,Genesis 12:1-9,Abram's Call,Gospel Project
+10/15/2025,Genesis 12:10-20,Abram's Call,Gospel Project
+10/16/2025,Genesis 13:1-18,Abram's Call,Gospel Project
+10/17/2025,Genesis 14:1-24,Abram's Call,Gospel Project
+10/18/2025,Psalm 128,Abram's Call,Gospel Project
+10/20/2025,Genesis 15:1-21,Abraham's Covenant,Gospel Project
+10/21/2025,Genesis 16:1-16,Abraham's Covenant,Gospel Project
+10/22/2025,Genesis 17:1-27,Abraham's Covenant,Gospel Project
+10/23/2025,Genesis 18:1-15,Abraham's Covenant,Gospel Project
+10/24/2025,Genesis 18:16-19:38,Abraham's Covenant,Gospel Project
+10/25/2025,Psalm 105,Abraham's Covenant,Gospel Project
+10/27/2025,Genesis 20:1-18,Abraham's Test,Gospel Project
+10/28/2025,Genesis 21:1-17,Abraham's Test,Gospel Project
+10/29/2025,Genesis 21:8-21,Abraham's Test,Gospel Project
+10/30/2025,Genesis 21:22-34,Abraham's Test,Gospel Project
+10/31/2025,Genesis 22:1-19,Abraham's Test,Gospel Project

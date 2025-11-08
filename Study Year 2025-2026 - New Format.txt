@@ -1,6 +1,8 @@
 Collection: Gospel Project
 
-Theme: Creation | September 8, 2025-September 13, 2025
+Theme: Creation | September 6, 2025-September 13, 2025
+September 6, 2025: Romans 2:4-6
+September 7, 2025: Luke 4:10
 September 8, 2025: Genesis 1:1-13
 September 9, 2025: Genesis 1:14-2:3
 September 10, 2025: Psalm 8
@@ -60,5 +62,5 @@ Theme: Abraham's Test | October 27, 2025-October 31, 2025
 October 27, 2025: Genesis 20:1-18
 October 28, 2025: Genesis 21:1-17
 October 29, 2025: Genesis 21:8-21
-October 30, 2025: Genesis 21:22-34
-October 31, 2025: Genesis 22:1-19
+October 30, 2025: Genesis 29:1-10
+October 31, 2025: Genesis 30:1-5
