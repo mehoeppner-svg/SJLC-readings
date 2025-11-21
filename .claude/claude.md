@@ -1,7 +1,7 @@
-# SJLC Daily Bible Readings - Claude Context (V2)
+# SJLC Daily Bible Readings - Claude Context (V3)
 
 ## Project Overview
-Python/Flask application for managing daily Bible reading content with verse references, AI-generated images, and audio. Generates HTML pages for Google Sites embedding. V2 redesign focuses on simplifying the data model (calendar years + collections), migrating to SQLite database, and modernizing the admin interface.
+Python/Flask application for managing daily Bible reading content with verse references, AI-generated images, and audio. Generates HTML pages for Google Sites embedding. V3 simplifies the admin interface to 3 streamlined pages (Import, Collections, Content) with a month calendar as the primary view.
 
 **Purpose:** Help St. John Lutheran Church congregation engage with daily Bible readings through visual and audio content.
 
@@ -23,6 +23,30 @@ Python/Flask application for managing daily Bible reading content with verse ref
 - Any `.py` files outside `gui/` folder
 
 **Approval process:** Present complete design plan first, wait for approval, then implement.
+
+---
+
+## Workflow & Task Approval
+
+**CRITICAL: Only do what is explicitly approved.**
+
+1. **Present plan for ONE task at a time** - Don't bundle multiple tasks together
+2. **Wait for explicit approval** - User must approve the plan before implementation
+3. **Stay within approved scope** - Only implement what was approved, nothing more
+4. **Ask before proceeding to next task** - After completing approved work, ask if user wants to proceed to the next task
+
+**Example workflow:**
+- User: "Let's start with task 2.2"
+- Claude: *presents plan for task 2.2 only*
+- User: *approves*
+- Claude: *implements task 2.2*
+- Claude: "Task 2.2 complete. Ready to proceed to task 2.3?"
+- User: *approves next task*
+
+**Do NOT:**
+- Automatically continue to the next task after completing one
+- Bundle multiple tasks into a single approval request (unless user explicitly asks)
+- Assume approval for related tasks
 
 ---
 
@@ -54,7 +78,7 @@ Python/Flask application for managing daily Bible reading content with verse ref
 
 ---
 
-## V2 Data Model
+## V3 Data Model
 
 ### Core Entities
 
@@ -62,68 +86,59 @@ Python/Flask application for managing daily Bible reading content with verse ref
 ```python
 {
     "date": "2025-09-08",           # YYYY-MM-DD format
-    "reference": "Genesis 1:1-13"   # Bible reference only
+    "reference": "Genesis 1:1-13",  # Bible reference
+    "collection_id": 1,             # FK to collections (nullable)
+    "theme": "Creation"             # Theme for this reading (nullable)
 }
 ```
-- **Simple flat structure** - No embedded themes or project flags
+- **Flat structure** - Collection and theme stored directly on reading
 - **One reading per day** - Sundays typically omitted
 - **~352 readings per year**
 
-**2. Collections** (Organizational containers like "Gospel Project", "Advent 2024", "Lent 2025")
+**2. Collections** (Simple tags like "Gospel Project", "Advent 2024", "Lent 2025")
 ```python
 {
+    "id": 1,
     "name": "Gospel Project",
-    "color": "#72abbf",             # Hex color for UI display
-    "weeks": [                       # Note: "weeks" = flexible date ranges (not just 7 days)
-        {
-            "start": "2025-09-07",  # Range start date
-            "end": "2025-09-13",    # Range end date
-            "theme": "Creation"     # Theme for this date range
-        },
-        {
-            "start": "2025-03-05",  # Single day (Ash Wednesday)
-            "end": "2025-03-05",
-            "theme": "Ashes & Repentance"
-        },
-        ...
-    ]
+    "color": "#72abbf"              # Hex color for UI display
 }
 ```
-- **Independent from readings** - Stored separately, linked by date matching only
-- **Date-based matching** - If reading date falls within a collection's date range, it belongs to that collection
-- **One collection per reading** - Each reading can only match ONE collection (no cross-collection overlaps)
-- **Flexible date ranges** - Can be 1 day, 7 days, or any length (not restricted to weeks)
-- **Visual indicators** - 4px colored left borders on calendar days, colored dots in lists
+- **Simple tags** - Just id, name, color (no date ranges)
+- **Linked to readings** - Via collection_id foreign key
+- **Usage tracking** - Count readings using each collection
+- **Visual indicators** - 4px colored left borders on calendar days
 
 **3. Content Status** (Tracks generated content and caches Drive file IDs)
 ```python
 {
     "date": "2025-09-08",
-    "drive_image_id": "1abc...xyz",     # Cached Google Drive file ID (prevents API calls)
+    "drive_image_id": "1abc...xyz",     # Cached Google Drive file ID
     "github_html_exists": true,          # Whether HTML file exists
+    "devotional_exists": false,          # Future content type
+    "commentary_exists": false,          # Future content type
+    "verse_card_exists": false,          # Future content type
     "last_generated": "2025-01-15T10:30:00"
 }
 ```
 - **Cache Drive file IDs** - Eliminates API calls when displaying content
 - **Status tracking** - Complete (image + HTML), Partial (only one), Missing (neither)
-- **Independent from readings** - No foreign key constraint; allows images without readings and vice-versa
+- **Expandable** - Additional content types can be added
 
 ### Database: SQLite
 
 **Why SQLite:**
-- ✅ Zero cost (no server hosting fees)
-- ✅ Perfect scale (~7,000 readings over 20 years = tiny dataset)
-- ✅ ACID transactions (no race conditions)
-- ✅ Fast queries with indexes
-- ✅ Easy backup (single .db file)
-- ✅ No maintenance required
+- Zero cost (no server hosting fees)
+- Perfect scale (~7,000 readings over 20 years = tiny dataset)
+- ACID transactions (no race conditions)
+- Fast queries with indexes
+- Easy backup (single .db file)
+- No maintenance required
 
 **Schema:**
 ```sql
-readings (id, date, reference, created_at, updated_at)
+readings (id, date, reference, collection_id, theme, created_at, updated_at)
 collections (id, name, color, created_at)
-collection_weeks (id, collection_id, start_date, end_date, theme)
-content_status (id, date, drive_image_id, github_html_exists, last_generated)
+content_status (id, date, drive_image_id, github_html_exists, devotional_exists, commentary_exists, verse_card_exists, last_generated)
 drive_folders (year, folder_id, last_scanned)
 ```
 
@@ -140,48 +155,41 @@ drive_folders (year, folder_id, last_scanned)
 ```
 $GITHUB_PRIVATE_REPO/             # Private repository (from .env)
 ├── src/                          # Backend Python (REQUIRE APPROVAL)
-│   ├── database_manager.py      # SQLite operations (NEW V2)
-│   ├── readings_manager.py      # Readings CRUD (NEW V2)
-│   ├── collections_manager.py   # Collections CRUD (NEW V2)
-│   ├── day_processor.py         # Content generation orchestration (UPDATED V2)
-│   ├── bible_manager.py         # ESV API integration (unchanged)
-│   ├── image_manager.py         # OpenAI DALL-E integration (unchanged)
-│   ├── content_manager.py       # HTML assembly (UPDATED V2)
-│   ├── drive_manager.py         # Google Drive operations (SIMPLIFIED V2)
-│   └── github_manager.py        # GitHub filesystem operations (unchanged)
+│   ├── database_manager.py      # SQLite operations
+│   ├── readings_manager.py      # Readings CRUD (with collection_id, theme)
+│   ├── collections_manager.py   # Collections CRUD (simplified for V3)
+│   ├── day_processor.py         # Content generation orchestration
+│   ├── bible_manager.py         # ESV API integration
+│   ├── image_manager.py         # OpenAI DALL-E integration
+│   ├── content_manager.py       # HTML assembly + status tracking
+│   ├── drive_manager.py         # Google Drive operations
+│   └── github_manager.py        # GitHub filesystem operations
 ├── gui/                          # Flask admin app (CAN MODIFY)
-│   ├── web_app_v2.py            # Flask app initialization
-│   ├── routes/                  # API endpoints (WILL BE UPDATED V2)
+│   ├── web_app.py               # Flask app initialization
+│   ├── routes/                  # API endpoints
 │   │   ├── dashboard.py
-│   │   ├── readings.py          # Replaces bookmarks.py (NEW V2)
-│   │   ├── collections.py       # NEW V2
-│   │   ├── content.py
-│   │   ├── processing.py
-│   │   ├── maintenance.py       # NEW V2
+│   │   ├── import_bp.py         # Import readings (V3)
+│   │   ├── collections.py       # Simplified collections CRUD (V3)
+│   │   ├── content.py           # Calendar + day popup (V3)
 │   │   └── settings.py
-│   ├── templates/               # Jinja2 templates (WILL BE REBUILT V2)
+│   ├── templates/               # Jinja2 templates
 │   │   ├── base.html
 │   │   ├── dashboard.html
-│   │   ├── readings_manager.html
-│   │   ├── content_manager.html
-│   │   ├── maintenance.html
+│   │   ├── import.html          # V3 import page
+│   │   ├── collections_v3.html  # V3 simplified collections
+│   │   ├── content_v3.html      # V3 calendar + day popup
 │   │   └── settings.html
-│   ├── static/                  # CSS/JS assets
-│   └── testing/                 # V2 prototypes (standalone HTML with dummy data)
-│       ├── admin-dashboard.html          # ✅ Complete
-│       ├── readings-manager.html         # ✅ Complete (4 views)
-│       ├── content-manager.html          # ✅ Complete
-│       ├── header.html                   # ✅ Complete
-│       ├── maintenance.html              # ✅ Complete
-│       └── settings.html                 # ✅ Complete
+│   └── static/                  # CSS/JS assets
+│       ├── css/
+│       └── js/
 ├── config/                       # Configuration (REQUIRE APPROVAL)
 │   ├── config.py                # Settings, API keys
 │   ├── googleDriveAPI.json      # Drive credentials
 │   └── token.json               # OAuth token
 ├── data/                         # Data storage
-│   ├── sjlc_readings.db         # SQLite database (NEW V2)
+│   ├── sjlc_readings.db         # SQLite database
 │   └── static_files/            # JS/CSS templates for Google Sites
-├── utils/                        # Utilities (NEW V2)
+├── utils/                        # Utilities
 │   ├── date_helpers.py          # Date parsing/formatting
 │   ├── api_helpers.py           # Retry logic, rate limiting
 │   └── file_helpers.py          # Safe file I/O
@@ -189,7 +197,7 @@ $GITHUB_PRIVATE_REPO/             # Private repository (from .env)
 │   ├── errors.log
 │   ├── processing.log
 │   └── system.log
-└── .env                          # Environment variables (GITHUB_PUBLIC_REPO, GITHUB_PRIVATE_REPO, API keys)
+└── .env                          # Environment variables
 
 $GITHUB_PUBLIC_REPO/              # Public repository (from .env)
 ├── years/                        # Generated HTML content
@@ -271,22 +279,22 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 **1. `SJLC-readings/.claude/claude.md`** (this file)
 - **Purpose:** Quick architectural reference for new Claude sessions
 - **When to read:** Always read this first (5 min scan)
-- **Contents:** Project overview, data model, repository structure, external services, V1→V2 changes
+- **Contents:** Project overview, data model, repository structure, external services
 - **Updates:** Only when architecture changes (rare)
 
 **2. `sjlc-private/backend.md`**
 - **Purpose:** Complete backend technical specification
 - **When to read:** When working on backend code (managers, database, APIs)
-- **Contents:** Database schema, manager architecture, code consolidation, processing flows, external API integration, threading
+- **Contents:** Database schema, manager architecture, processing flows, external API integration, threading
 - **Updates:** When backend implementation details change
 
 **3. `sjlc-private/gui/admin.md`**
 - **Purpose:** Complete admin GUI specification
 - **When to read:** When working on frontend (templates, routes, UI/UX)
-- **Contents:** Design system, page specifications, data flow (API contracts), component library, V1→V2 UI changes
+- **Contents:** Design system, page specifications, data flow (API contracts), component library
 - **Updates:** When UI specifications change
 
-**4. `sjlc-private/v2-todo.md`**
+**4. `sjlc-private/v3-todo.md`**
 - **Purpose:** Implementation plan and progress tracking
 - **When to read:** To see current status, next steps, what's completed
 - **Contents:** Phase-by-phase plan, task checkboxes, changelog, current blockers
@@ -296,59 +304,54 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 
 **Starting a new session:**
 1. Read `claude.md` (this file) - 5 min architectural overview
-2. Read `v2-todo.md` - See current status and next task
+2. Read `v3-todo.md` - See current status and next task
 3. Read `backend.md` or `admin.md` - Depending on task type
 4. Begin work
 
 **During work:**
 - Reference `backend.md` or `admin.md` for detailed specs
-- Update `v2-todo.md` after completing tasks
+- Update `v3-todo.md` after completing tasks
 - Only update `claude.md`, `backend.md`, `admin.md` if architecture/specs change
 
 ---
 
-## Major V1 → V2 Changes
+## Major V2 → V3 Changes
 
 ### Data Model
-| Aspect | V1 | V2 |
+| Aspect | V2 | V3 |
 |--------|----|----|
-| **Year Model** | Project Year (2024-2025) | Calendar Year (2024, 2025) |
-| **Terminology** | Bookmarks | Readings |
-| **Structure** | Week-based with embedded themes | Flat readings + separate collections |
-| **Storage** | JSON files (`*_bookmarks.json`) | SQLite database |
-| **Theme Storage** | In week object with days | In collection weeks (separate table) |
-| **Project Tracking** | Boolean flag on weeks | Implicit by date range matching |
-| **Caching** | JSON cache files | Database table with Drive file IDs |
-
-### Backend Architecture
-| Component | V1 | V2 |
-|-----------|----|----|
-| **Data Access** | `bookmarks_manager.py` (JSON parsing) | `database_manager.py` (SQLite queries) |
-| **Readings** | Part of bookmarks manager | Separate `readings_manager.py` |
-| **Collections** | Not a concept (themes in weeks) | Separate `collections_manager.py` |
-| **Caching** | `cache_manager.py` (JSON files) | Database `content_status` table |
-| **Code Duplication** | Date/API/file logic scattered | Consolidated in `utils/` modules |
+| **Collections** | Separate table with date ranges | Simple tags (id, name, color only) |
+| **Date Ranges** | `collection_weeks` table | Removed - no date range matching |
+| **Theme Storage** | In collection_weeks table | Directly on readings table |
+| **Collection Link** | Date-based matching | FK `readings.collection_id` |
+| **Content Status** | 3 fields | 6 fields (added devotional, commentary, verse_card) |
 
 ### Admin Interface
-| Feature | V1 | V2 |
+| Feature | V2 | V3 |
 |---------|----|----|
-| **Navigation** | Separate pages, tree view | Modal-based workflows, 4 main views |
-| **Readings View** | Tree (week → day) + Calendar | Calendar + List + Collections + Year |
-| **Content Generation** | Multi-page wizard | Single 3-screen modal |
-| **Quad Images** | Separate generator page | Integrated in generation workflow |
-| **Maintenance** | Part of Settings | Separate section with database sync |
-| **Project Selector** | Dropdown badge (2024-2025) | Simple year dropdown (2024) |
-| **Collections** | Not visible (embedded in data) | Dedicated CRUD interface with color coding |
+| **Navigation** | Dashboard, Readings, Collections, Content, Settings | Dashboard, Import, Collections, Content, Settings |
+| **Readings Manager** | 4 views (Calendar, List, Collections, Year) | Removed - replaced by Import page |
+| **Collections Manager** | 4 views with date range management | Simple CRUD table (no date ranges) |
+| **Content Manager** | 2 views (Calendar, List) | Month calendar + day popup modal |
+| **Primary Interface** | Multiple views per manager | Single calendar view with popup for all CRUD |
+| **Add Readings** | Modal in Readings Manager | Import page (file upload) or day popup |
+| **Edit Readings** | Bulk edit modal | Day popup (single reading at a time) |
+
+### Backend Changes
+| Component | V2 | V3 |
+|-----------|----|----|
+| **readings_manager** | date, reference only | date, reference, collection_id, theme |
+| **collections_manager** | Full CRUD + date range methods | Simplified CRUD + usage count |
+| **collection_weeks table** | Exists | Dropped |
 
 ### User Experience
-| Aspect | V1 | V2 |
+| Aspect | V2 | V3 |
 |--------|----|----|
-| **Year Navigation** | September-to-August (confusing) | January-to-December (intuitive) |
-| **Theme Discovery** | Hidden in week structure | Visual collection indicators (colors, legend) |
-| **Status Display** | Basic complete/incomplete | Color-coded borders (green/orange/red) |
-| **Bulk Actions** | Limited selection options | Checkbox selection syncs across views |
-| **Image Selection** | Navigate away to separate page | Inline approval modals auto-open |
-| **Progress Tracking** | Separate page with refresh | Real-time threaded progress in modal |
+| **Workflow** | Navigate between manager views | Single calendar, click day for all operations |
+| **Add Reading** | Open modal, fill form | Click empty day, fill popup, save |
+| **Edit Reading** | Select, click edit, bulk modal | Click day, edit in popup, save |
+| **Assign Collection** | Date range overlaps | Direct dropdown in day popup |
+| **Create Collection** | Collections Manager | Inline in day popup ("+ New Collection") |
 
 ---
 
@@ -363,10 +366,9 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 - **Config:** `$GITHUB_PRIVATE_REPO/config/config.py` and `.env`
 
 ### Frontend Code
-- **Flask App:** `$GITHUB_PRIVATE_REPO/gui/web_app_v2.py`
+- **Flask App:** `$GITHUB_PRIVATE_REPO/gui/web_app.py`
 - **Routes:** `$GITHUB_PRIVATE_REPO/gui/routes/*.py`
 - **Templates:** `$GITHUB_PRIVATE_REPO/gui/templates/*.html`
-- **Prototypes:** `$GITHUB_PRIVATE_REPO/gui/testing/*.html` (V2 standalone HTML)
 
 ### Published Content
 - **HTML:** `$GITHUB_PUBLIC_REPO/years/{year}/content/{date}_reading.html`
@@ -411,9 +413,15 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 - **OpenAI:** 2-second delay, 3 retry attempts with exponential backoff
 - **Drive:** Retry with backoff (1, 2, 4 seconds) on errors
 
+### Error Display
+- **NEVER use flash messages** (banners that push content down)
+- **Preferred:** Inline error messages within modals/forms
+- **Alternative:** Alert pop-ups for critical errors
+- **Example:** Use `showError()` function to display inline errors in modal forms
+
 ---
 
-## Design Principles (V2)
+## Design Principles
 
 ### Code Organization
 1. **Single Responsibility:** Each manager does ONE thing (readings, collections, images, etc.)
@@ -468,7 +476,7 @@ Always use these environment variables. Never hardcode paths.
 ```
 $GITHUB_PRIVATE_REPO/
 ├── src\*.py                    # Python managers
-├── gui\web_app_v2.py          # Flask app
+├── gui\web_app.py             # Flask app
 ├── gui\routes\*.py            # API routes
 ├── gui\templates\*.html       # Jinja2 templates
 ├── gui\static\                # CSS/JS/images
@@ -485,13 +493,11 @@ $GITHUB_PUBLIC_REPO/
 └── .claude\*.md                   # Documentation
 ```
 
-### V1 Backups (Reference only, don't modify)
+### Archive (Reference only, don't modify)
 ```
-$GITHUB_PRIVATE_REPO/
-├── src\backups\*              # Old V1 managers
-├── gui\routes\backups\*       # Old V1 routes
-├── gui\templates\backups\*    # Old V1 templates
-└── gui\web_app_v1.py          # Old Flask app (renamed)
+$GITHUB_PRIVATE_REPO/gui/archive/
+├── v1\                        # V1 backup code
+└── v2\                        # V2 backup code
 ```
 
 **Never look in SJLC-readings repo for backend Python code!**
@@ -501,7 +507,7 @@ $GITHUB_PRIVATE_REPO/
 ## Quick Start for New Claude Sessions
 
 1. **Read this file first** (5 min) - Architectural overview
-2. **Read `v2-todo.md`** - Current status and next task
+2. **Read `v3-todo.md`** - Current status and next task
 3. **Read `backend.md` or `admin.md`** - Detailed specs for your task
 4. **Begin work** - Reference docs as needed
 
@@ -509,14 +515,15 @@ $GITHUB_PRIVATE_REPO/
 
 ## Notes
 
-- **V2 implementation in progress** - See `v2-todo.md` for current status
+- **V3 implementation in progress** - See `v3-todo.md` for current status
 - **Two repos:** Keep public (HTML) and private (code) separate
-- **Database first:** SQLite foundation, then managers, then UI
-- **Collections are key:** Separate from readings, matched by date ranges
+- **Simple collections:** Tags only, no date ranges
+- **Calendar-first:** Month calendar is primary interface
+- **Day popup:** All CRUD operations in one modal
 - **Cache Drive IDs:** Store in database to eliminate API calls
-- **Calendar years only:** No more Sept-Aug project year confusion
+- **Calendar years only:** January-December (no Sept-Aug confusion)
 
 ---
 
-**Last Updated:** 2025-01-02
-**Status:** V2 Implementation Starting - See v2-todo.md
+**Last Updated:** 2025-01-19
+**Status:** V3 Implementation Starting - See v3-todo.md
