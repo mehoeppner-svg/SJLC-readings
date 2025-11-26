@@ -59,11 +59,15 @@ Python/Flask application for managing daily Bible reading content with verse ref
 - `GITHUB_PRIVATE_REPO` - Path to private sjlc-private repository
 
 **1. Public Repository: `SJLC-readings`** (path from `GITHUB_PUBLIC_REPO` in .env)
-- **Purpose:** Published HTML content served via GitHub Pages
+- **Purpose:** Published HTML content and images served via GitHub Pages
 - **URL:** https://mehoeppner-svg.github.io/SJLC-readings
 - **Contents:**
-  - `years/{year}/content/{date}_reading.html` - Daily HTML files
-  - `daily_content/{year}_daily_content.json` - Content index for fast loading
+  - `years/{year}/daily_readings/{date}_reading.html` - Daily HTML files
+  - `years/{year}/images/{date}_verse_card.webp` - Verse card images (text baked in by Pillow)
+  - `years/{year}/devotionals/` - Future devotional HTML
+  - `years/{year}/commentary/` - Future commentary HTML
+  - `static_files/daily-reading.css` - Shared CSS for daily reading pages
+  - `static_files/daily-reading.js` - Shared JavaScript for daily reading pages
   - `.claude/claude.md` - This documentation file
 
 **2. Private Repository: `sjlc-private`** (path from `GITHUB_PRIVATE_REPO` in .env)
@@ -200,12 +204,17 @@ $GITHUB_PRIVATE_REPO/             # Private repository (from .env)
 └── .env                          # Environment variables
 
 $GITHUB_PUBLIC_REPO/              # Public repository (from .env)
-├── years/                        # Generated HTML content
+├── years/                        # Generated content by year
 │   └── {year}/
-│       └── content/
-│           └── {date}_reading.html
-├── daily_content/                # JSON indexes
-│   └── {year}_daily_content.json
+│       ├── daily_readings/       # Daily HTML files
+│       │   └── {date}_reading.html
+│       ├── images/               # Verse card images (text baked in)
+│       │   └── {date}_verse_card.webp
+│       ├── devotionals/          # Future devotional HTML
+│       └── commentary/           # Future commentary HTML
+├── static_files/                 # Shared CSS/JS for daily reading pages
+│   ├── daily-reading.css
+│   └── daily-reading.js
 └── .claude/
     └── claude.md                 # This file
 ```
@@ -239,34 +248,34 @@ $GITHUB_PUBLIC_REPO/              # Public repository (from .env)
 
 **Quad Images:** Generate 4 style variations (Realistic, Artistic, Watercolor, Minimalist) for user selection
 
-### 3. Google Drive
-**Purpose:** Image storage and hosting
+### 3. GitHub Pages
+**Purpose:** HTML content and image hosting (public access)
+**URL:** `https://mehoeppner-svg.github.io/SJLC-readings`
+
 **Folder Structure:**
 ```
-DRIVE_FOLDERS.YEARS (root)
-└── {year}/
-    └── {date}_image.webp
+years/{year}/
+├── daily_readings/          # Generated HTML files
+│   └── {date}_reading.html
+├── images/                  # Verse card images (text baked in by Pillow)
+│   └── {date}_verse_card.webp
+├── devotionals/             # Future
+└── commentary/              # Future
+
+static_files/
+├── daily-reading.css        # Shared styles for daily reading pages
+└── daily-reading.js         # Shared JavaScript (settings, copy, modals)
 ```
 
-**Auth:** OAuth 2.0 (credentials.json → token.json)
-**Operations:** Upload, delete, list files, get file IDs
-**Manager:** `drive_manager.py`
-**Thread Safety:** Single `_api_lock` for ALL Drive operations (critical)
-
-**Caching:** File IDs cached in `content_status` table to eliminate API calls during display
-
-**Note:** Images stored directly in year folder (e.g., "2025/"), not in "content" subfolder
-
-### 4. GitHub Pages
-**Purpose:** HTML content hosting (public access)
-**URL:** `https://mehoeppner-svg.github.io/SJLC-readings`
 **Workflow:**
-1. Generate HTML locally via `github_manager.py`
+1. Backend generates HTML and verse card images
 2. Save to local Git repository (filesystem operations only)
 3. User manually commits and pushes via VS Code/CLI
 4. GitHub Pages automatically serves updated content
 
 **No API:** Direct filesystem operations, no automated deployment
+
+**Note:** Images hosted on GitHub Pages (not Google Drive) to enable copy-to-clipboard functionality without CORS issues.
 
 ---
 
@@ -371,8 +380,9 @@ This file (claude.md) provides **architectural overview only**. For detailed inf
 - **Templates:** `$GITHUB_PRIVATE_REPO/gui/templates/*.html`
 
 ### Published Content
-- **HTML:** `$GITHUB_PUBLIC_REPO/years/{year}/content/{date}_reading.html`
-- **JSON Index:** `$GITHUB_PUBLIC_REPO/daily_content/{year}_daily_content.json`
+- **HTML:** `$GITHUB_PUBLIC_REPO/years/{year}/daily_readings/{date}_reading.html`
+- **Images:** `$GITHUB_PUBLIC_REPO/years/{year}/images/{date}_verse_card.webp`
+- **Static Files:** `$GITHUB_PUBLIC_REPO/static_files/daily-reading.css` and `.js`
 
 ### Logs
 - **Errors:** `$GITHUB_PRIVATE_REPO/logs/errors.log`
@@ -488,9 +498,10 @@ $GITHUB_PRIVATE_REPO/
 ### Published Content (SJLC-readings repo from GITHUB_PUBLIC_REPO)
 ```
 $GITHUB_PUBLIC_REPO/
-├── years\{year}\content\*.html    # Daily HTML files
-├── daily_content\*.json           # JSON indexes
-└── .claude\*.md                   # Documentation
+├── years\{year}\daily_readings\*.html   # Daily HTML files
+├── years\{year}\images\*.webp           # Verse card images
+├── static_files\                        # Shared CSS/JS
+└── .claude\*.md                         # Documentation
 ```
 
 ### Archive (Reference only, don't modify)
@@ -516,14 +527,15 @@ $GITHUB_PRIVATE_REPO/gui/archive/
 ## Notes
 
 - **V3 implementation in progress** - See `v3-todo.md` for current status
-- **Two repos:** Keep public (HTML) and private (code) separate
+- **Two repos:** Keep public (HTML/images) and private (code) separate
 - **Simple collections:** Tags only, no date ranges
 - **Calendar-first:** Month calendar is primary interface
 - **Day popup:** All CRUD operations in one modal
-- **Cache Drive IDs:** Store in database to eliminate API calls
+- **Images on GitHub:** Verse card images hosted on GitHub Pages (not Google Drive) for CORS-free copy-to-clipboard
+- **Verse cards:** Text baked into image by Pillow during generation
 - **Calendar years only:** January-December (no Sept-Aug confusion)
 
 ---
 
-**Last Updated:** 2025-01-19
-**Status:** V3 Implementation Starting - See v3-todo.md
+**Last Updated:** 2025-11-26
+**Status:** V3 Implementation In Progress - See v3-todo.md
