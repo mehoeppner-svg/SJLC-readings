@@ -238,20 +238,29 @@
 }
 
 .verse-card-copy-btn {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.5);
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.3);
     color: white;
-    padding: 0.3rem 0.7rem;
+    padding: 0.4rem;
     border-radius: 4px;
-    margin-top: 0.5rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-size: 0.7rem;
+    font-size: 1rem;
+    line-height: 1;
+    z-index: 10;
 }
 
 .verse-card-copy-btn:hover {
-    background: rgba(255,255,255,0.3);
-    border-color: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.7);
+    border-color: rgba(255,255,255,0.6);
+}
+
+.verse-card-copy-btn.copied {
+    background: rgba(39, 174, 96, 0.8);
+    border-color: rgba(39, 174, 96, 0.9);
 }
 
 /* ===== IMAGE SECTION ===== */

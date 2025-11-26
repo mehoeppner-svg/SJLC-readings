@@ -67,6 +67,58 @@ document.getElementById('shareBtn').addEventListener('click', async () => {
     }
 });
 
+// ===== VERSE CARD COPY FUNCTIONALITY =====
+const verseCardCopyBtn = document.getElementById('verseCardCopyBtn');
+if (verseCardCopyBtn) {
+    verseCardCopyBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+
+        // Get verse text and reference from the card
+        const verseText = document.querySelector('.verse-card-text')?.textContent?.trim() || '';
+        const verseRef = document.querySelector('.verse-card-reference')?.textContent?.trim() || '';
+
+        // Format the text to copy
+        const textToCopy = `${verseText}\n${verseRef}`;
+
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+
+            // Show success feedback
+            verseCardCopyBtn.textContent = '✓';
+            verseCardCopyBtn.classList.add('copied');
+
+            // Reset after 2 seconds
+            setTimeout(() => {
+                verseCardCopyBtn.textContent = '📋';
+                verseCardCopyBtn.classList.remove('copied');
+            }, 2000);
+        } catch (err) {
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                document.execCommand('copy');
+                verseCardCopyBtn.textContent = '✓';
+                verseCardCopyBtn.classList.add('copied');
+
+                setTimeout(() => {
+                    verseCardCopyBtn.textContent = '📋';
+                    verseCardCopyBtn.classList.remove('copied');
+                }, 2000);
+            } catch (fallbackErr) {
+                console.log('Copy failed:', fallbackErr);
+            }
+
+            document.body.removeChild(textarea);
+        }
+    });
+}
+
 // ===== MODAL POPUP FOR FOOTNOTES/CROSSREFS =====
 const modalOverlay = document.getElementById('modalOverlay');
 const modalPopup = document.getElementById('modalPopup');
