@@ -68,131 +68,39 @@ document.getElementById('shareBtn').addEventListener('click', async () => {
 });
 
 // ===== VERSE CARD COPY FUNCTIONALITY =====
+// The verse card image already has text baked in by Pillow - just copy the image directly
 const verseCardCopyBtn = document.getElementById('verseCardCopyBtn');
 if (verseCardCopyBtn) {
     verseCardCopyBtn.addEventListener('click', async (e) => {
         e.stopPropagation();
 
-        // Get the verse card image
         const verseCardImage = document.querySelector('.verse-card-image');
         if (!verseCardImage) return;
 
         try {
-            // Create a canvas to draw the verse card (image + overlay)
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            // Fetch the image and copy to clipboard
+            const response = await fetch(verseCardImage.src);
+            const blob = await response.blob();
 
-            // Set canvas size to match image
-            canvas.width = 400;
-            canvas.height = 225;
+            await navigator.clipboard.write([
+                new ClipboardItem({ [blob.type]: blob })
+            ]);
 
-            // Create a new image to load the source
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
+            // Show success feedback
+            verseCardCopyBtn.textContent = '✓';
+            verseCardCopyBtn.classList.add('copied');
 
-            img.onload = async () => {
-                // Draw the background image
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                // Apply darkening overlay
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Get verse text and reference
-                const verseText = document.querySelector('.verse-card-text')?.textContent?.trim() || '';
-                const verseRef = document.querySelector('.verse-card-reference')?.textContent?.trim() || '';
-
-                // Set up text styling
-                ctx.textAlign = 'center';
-                ctx.fillStyle = 'white';
-                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-                ctx.shadowBlur = 4;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 2;
-
-                // Draw verse text (italic)
-                ctx.font = 'italic 18px Georgia, serif';
-                const maxWidth = canvas.width - 40;
-                const lines = wrapText(ctx, verseText, maxWidth);
-                const lineHeight = 24;
-                const startY = (canvas.height - (lines.length * lineHeight) - 20) / 2 + lineHeight;
-
-                lines.forEach((line, index) => {
-                    ctx.fillText(line, canvas.width / 2, startY + (index * lineHeight));
-                });
-
-                // Draw reference
-                ctx.font = '14px Arial, sans-serif';
-                ctx.shadowBlur = 2;
-                ctx.fillText(verseRef, canvas.width / 2, startY + (lines.length * lineHeight) + 15);
-
-                // Convert canvas to blob and copy to clipboard
-                canvas.toBlob(async (blob) => {
-                    try {
-                        await navigator.clipboard.write([
-                            new ClipboardItem({ 'image/png': blob })
-                        ]);
-
-                        // Show success feedback
-                        verseCardCopyBtn.textContent = '✓';
-                        verseCardCopyBtn.classList.add('copied');
-
-                        setTimeout(() => {
-                            verseCardCopyBtn.textContent = '📋';
-                            verseCardCopyBtn.classList.remove('copied');
-                        }, 2000);
-                    } catch (clipboardErr) {
-                        console.log('Clipboard write failed:', clipboardErr);
-                        // Fallback: download the image
-                        downloadImage(canvas, 'verse-card.png');
-                    }
-                }, 'image/png');
-            };
-
-            img.onerror = () => {
-                console.log('Failed to load image for copying');
-            };
-
-            // Load the image
-            img.src = verseCardImage.src;
+            setTimeout(() => {
+                verseCardCopyBtn.textContent = '📋';
+                verseCardCopyBtn.classList.remove('copied');
+            }, 2000);
 
         } catch (err) {
             console.log('Copy failed:', err);
+            // Fallback: open image in new tab for manual save
+            window.open(verseCardImage.src, '_blank');
         }
     });
-}
-
-// Helper function to wrap text on canvas
-function wrapText(ctx, text, maxWidth) {
-    const words = text.split(' ');
-    const lines = [];
-    let currentLine = '';
-
-    words.forEach(word => {
-        const testLine = currentLine + (currentLine ? ' ' : '') + word;
-        const metrics = ctx.measureText(testLine);
-
-        if (metrics.width > maxWidth && currentLine) {
-            lines.push(currentLine);
-            currentLine = word;
-        } else {
-            currentLine = testLine;
-        }
-    });
-
-    if (currentLine) {
-        lines.push(currentLine);
-    }
-
-    return lines;
-}
-
-// Helper function to download image as fallback
-function downloadImage(canvas, filename) {
-    const link = document.createElement('a');
-    link.download = filename;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
 }
 
 // ===== MODAL POPUP FOR FOOTNOTES/CROSSREFS =====
