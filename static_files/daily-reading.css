@@ -141,11 +141,9 @@
 
 /* ===== SHARE BUTTON ===== */
 /* Positioned above bible content box to the right */
+/* Share button disabled for now - was causing Chrome to freeze */
 .share-section {
-    position: absolute;
-    right: 0.5rem;
-    top: -2.5rem;
-    z-index: 90;
+    display: none;
 }
 
 .share-btn {

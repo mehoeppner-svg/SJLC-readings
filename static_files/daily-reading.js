@@ -47,25 +47,9 @@ document.getElementById('toggleCrossrefs').addEventListener('change', (e) => {
 });
 
 // ===== SHARE FUNCTIONALITY =====
-document.getElementById('shareBtn').addEventListener('click', async () => {
-    const shareData = {
-        title: 'Genesis 1:1-13 - Daily Bible Reading',
-        text: 'Check out today\'s Bible reading from The Gospel Project!',
-        url: window.location.href
-    };
-
-    try {
-        if (navigator.share) {
-            await navigator.share(shareData);
-        } else {
-            // Fallback: copy to clipboard
-            await navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
-        }
-    } catch (err) {
-        console.log('Share failed:', err);
-    }
-});
+// Disabled for now - was causing Chrome to freeze
+// TODO: Implement proper share with image + verses later
+// document.getElementById('shareBtn').addEventListener('click', async () => { ... });
 
 // ===== VERSE CARD COPY FUNCTIONALITY =====
 // The verse card image already has text baked in by Pillow - just copy the image directly
