@@ -69,6 +69,7 @@ document.getElementById('shareBtn').addEventListener('click', async () => {
 
 // ===== VERSE CARD COPY FUNCTIONALITY =====
 // The verse card image already has text baked in by Pillow - just copy the image directly
+// Note: Clipboard API requires PNG format, so we convert WebP to PNG via canvas
 const verseCardCopyBtn = document.getElementById('verseCardCopyBtn');
 if (verseCardCopyBtn) {
     verseCardCopyBtn.addEventListener('click', async (e) => {
@@ -78,12 +79,29 @@ if (verseCardCopyBtn) {
         if (!verseCardImage) return;
 
         try {
-            // Fetch the image and copy to clipboard
-            const response = await fetch(verseCardImage.src);
-            const blob = await response.blob();
+            // Create a canvas to convert image to PNG (required by Clipboard API)
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Create a new image to ensure it's loaded
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = verseCardImage.src;
+            });
+
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+
+            // Convert to PNG blob (required format for clipboard)
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
 
             await navigator.clipboard.write([
-                new ClipboardItem({ [blob.type]: blob })
+                new ClipboardItem({ 'image/png': blob })
             ]);
 
             // Show success feedback
