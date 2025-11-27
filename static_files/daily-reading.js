@@ -53,12 +53,19 @@ document.getElementById('toggleCrossrefs').addEventListener('change', (e) => {
 
 // ===== VERSE CARD CLICK TO OPEN =====
 // Click on verse card image opens it in a new tab for saving/sharing
-const verseCardImage = document.querySelector('.verse-card-image');
-if (verseCardImage) {
-    verseCardImage.style.cursor = 'pointer';
-    verseCardImage.addEventListener('click', () => {
-        window.open(verseCardImage.src, '_blank');
-    });
+function initVerseCardClick() {
+    const verseCardImage = document.querySelector('.verse-card-image');
+    if (verseCardImage) {
+        verseCardImage.style.cursor = 'pointer';
+        verseCardImage.addEventListener('click', () => {
+            window.open(verseCardImage.src, '_blank');
+        });
+    }
+}
+// Run immediately (for dynamic loader) and on DOMContentLoaded (for direct page load)
+initVerseCardClick();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVerseCardClick);
 }
 
 // ===== MODAL POPUP FOR FOOTNOTES/CROSSREFS =====
