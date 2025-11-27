@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Reading</title>
+    <link rel="stylesheet" href="https://mehoeppner-svg.github.io/SJLC-readings/static_files/daily-reading.css">
+    <style>
+        .loading {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #666;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+        }
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        .error {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #5e6266;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="reading-container">
+        <div class="loading">Loading today's reading</div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://mehoeppner-svg.github.io/SJLC-readings';
+
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        async function loadReading() {
+            const date = getTodayDate();
+            const year = date.substring(0, 4);
+            const url = `${BASE_URL}/years/${year}/daily_readings/${date}_reading.html`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('No reading for today');
+                }
+                const html = await response.text();
+
+                // Extract body content from full HTML document
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const bodyContent = doc.body.innerHTML;
+
+                document.getElementById('reading-container').innerHTML = bodyContent;
+            } catch (error) {
+                document.getElementById('reading-container').innerHTML = `
+                    <div class="error">
+                        <div class="error-icon">📖</div>
+                        <div>No reading scheduled for today.</div>
+                        <div style="margin-top: 0.5rem; font-size: 0.95rem; opacity: 0.8;">Check back tomorrow!</div>
+                    </div>
+                `;
+            }
+        }
+
+        loadReading();
+    </script>
+    <script src="https://mehoeppner-svg.github.io/SJLC-readings/static_files/daily-reading.js"></script>
+</body>
+</html>
