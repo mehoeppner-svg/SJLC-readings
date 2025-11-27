@@ -71,7 +71,14 @@
                 const doc = parser.parseFromString(html, 'text/html');
                 const bodyContent = doc.body.innerHTML;
 
+                // Inject the content
                 document.getElementById('reading-container').innerHTML = bodyContent;
+
+                // Now load the JavaScript AFTER content is in the DOM
+                const script = document.createElement('script');
+                script.src = `${BASE_URL}/static_files/daily-reading.js`;
+                document.body.appendChild(script);
+
             } catch (error) {
                 document.getElementById('reading-container').innerHTML = `
                     <div class="error">
@@ -85,6 +92,5 @@
 
         loadReading();
     </script>
-    <script src="https://mehoeppner-svg.github.io/SJLC-readings/static_files/daily-reading.js"></script>
 </body>
 </html>
